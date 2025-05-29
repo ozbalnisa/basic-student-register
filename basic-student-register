@@ -1,0 +1,74 @@
+using System;
+using System.Data;
+using System.Windows.Forms;
+
+namespace Giriş_Uygulaması
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            DataTable ogrenciListesi = new DataTable();
+            ogrenciListesi.Columns.Add("Öğrenci Adı", typeof(String));
+            ogrenciListesi.Columns.Add("Öğrenci Soyadı", typeof(String));
+            ogrenciListesi.Columns.Add("Öğrenci Cinsiyeti", typeof(String));
+            dataGridView1.DataSource = ogrenciListesi;
+        }
+
+        private void ekleButton_Click(object sender, EventArgs e)
+        {
+            if (ogrenciAdiText.Text.Length > 0 && ogrenciSoyadiText.Text.Length > 0 && erkekOgrenci.Checked || kızOgrenci.Checked)
+            {
+                DataTable ogrenciListesi = (DataTable)dataGridView1.DataSource;
+                ogrenciListesi.Rows.Add(ogrenciAdiText.Text, ogrenciSoyadiText.Text, (erkekOgrenci.Checked) ? ("Erkek") : ("Kız"));
+                dataGridView1.Refresh();
+                MessageBox.Show("Öğrenci Başarıyla Kaydedildi!");
+            }
+            else
+            {
+                MessageBox.Show("Lütfen tüm alanları doldurduğunuzdan emin olun!!","Hata!"
+                    ,MessageBoxButtons.OK , MessageBoxIcon.Warning);
+            }
+        }
+
+        private void silButton_Click(object sender, EventArgs e)
+        {
+            if (ogrenciAdiText.Text.Length > 0 && ogrenciSoyadiText.Text.Length > 0 && erkekOgrenci.Checked || kızOgrenci.Checked)
+            {
+                DataTable ogrenciListesi = (DataTable)dataGridView1.DataSource;
+                string ogrenciAdi = ogrenciAdiText.Text;
+                string ogrenciSoyadi = ogrenciSoyadiText.Text;
+                string ogrenciCinsiyeti = (erkekOgrenci.Checked) ? "Erkek" : "Kız";
+
+                bool found = false;
+
+                foreach (DataRow row in ogrenciListesi.Rows)
+                {
+                    if (row["Öğrenci Adı"].ToString() == ogrenciAdi &&
+                        row["Öğrenci Soyadı"].ToString() == ogrenciSoyadi &&
+                        row["Öğrenci Cinsiyeti"].ToString() == ogrenciCinsiyeti)
+                    {
+                        ogrenciListesi.Rows.Remove(row);
+                        found = true;
+                        break;
+                    }
+                }
+                if (found)
+                {
+                    dataGridView1.Refresh();
+                    MessageBox.Show("Öğrenci Başarıyla Silindi!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Lütfen tüm alanları doldurduğunuzdan emin olun!!", "Hata!"
+                    , MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+}
